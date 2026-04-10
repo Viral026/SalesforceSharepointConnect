@@ -1,0 +1,363 @@
+<!--
+  @description       :
+  @author            : Viral Jain
+  @group             :
+  @last modified on  : 03-11-2026
+  @last modified by  : Viral Jain
+-->
+<template>
+    <lightning-card>
+        <!-- Custom Centered Header -->
+        <div class="custom-header">
+            <lightning-icon icon-name="standard:document" size="small" class="header-icon"></lightning-icon>
+            <h2 class="header-title">SharePoint Knowledge Hub</h2>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="slds-p-horizontal_medium slds-p-vertical_small">
+            <div class="simple-search">
+                <lightning-input
+                    type="search"
+                    placeholder="Search files and folders..."
+                    value={searchKeyword}
+                    onchange={handleSearchInput}
+                    class="search-input"
+                    variant="label-hidden"
+                ></lightning-input>
+                <lightning-button
+                    variant="brand"
+                    label="Search"
+                    onclick={handleSearch}
+                    icon-name="utility:search"
+                    icon-position="left"
+                ></lightning-button>
+            </div>
+        </div>
+ <!-- Action Buttons -->
+        <div if:false={isSearchActive} class="slds-p-horizontal_medium slds-p-vertical_small">
+            <div class="action-buttons-container">
+                <lightning-button
+                    variant="brand"
+                    label="Upload File"
+                    icon-name="utility:upload"
+                    icon-position="left"
+                    onclick={handleOpenUploadModal}
+                ></lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label="Create Folder"
+                    onclick={handleOpenFolderModal}
+                ></lightning-button>
+            </div>
+        </div>
+
+        <!-- Upload File Modal -->
+        <template if:true={showUploadModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open" aria-modal="true">
+                <div class={uploadModalContainerClass}>
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close"
+                                onclick={handleCloseUploadModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-modal__title slds-hyphenate slds-text-align_center">Upload File</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <template if:false={isUploading}>
+                            <div class="slds-form-element">
+                                <input
+                                    type="file"
+                                    id="fileInput"
+                                    onchange={handleFileChange}
+                                    class="file-input-hidden"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.png,.jpg,.jpeg,.gif,.csv"
+                                />
+                                <template if:false={selectedFile}>
+                                    <div class="slds-align_absolute-center slds-m-vertical_medium">
+                                        <lightning-button
+                                            variant="neutral"
+                                            label="Choose File"
+                                            onclick={handleChooseFile}
+                                            icon-name="utility:upload"
+                                        ></lightning-button>
+                                    </div>
+                                    <p class="slds-text-align_center slds-text-color_weak slds-m-top_small">
+                                        Supported: PDF, Word, Excel, PowerPoint, Images and more.
+                                    </p>
+                                </template>
+                                <template if:true={selectedFile}>
+                                    <div class="slds-box slds-box_x-small slds-theme_shade slds-m-top_small">
+                                        <div class="slds-media slds-media_center">
+                                            <div class="slds-media__figure">
+                                                <lightning-icon icon-name="doctype:attachment" size="small"></lightning-icon>
+                                            </div>
+                                            <div class="slds-media__body">
+                                                <p class="slds-text-body_regular slds-truncate" title={selectedFileName}>{selectedFileName}</p>
+                                                <p class="slds-text-color_weak slds-text-body_small">{selectedFileSize}</p>
+                                            </div>
+                                            <div class="slds-media__figure slds-media__figure_reverse">
+                                                <lightning-button-icon
+                                                    icon-name="utility:close"
+                                                    alternative-text="Remove"
+                                                    variant="bare"
+                                                    onclick={handleRemoveFile}
+                                                ></lightning-button-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:true={isUploading}>
+                            <div class="upload-progress-container">
+                                <lightning-spinner alternative-text="Uploading..." size="medium"></lightning-spinner>
+                                <p class="progress-title">Uploading your file...</p>
+                                <p class="progress-subtitle">{selectedFileName}</p>
+                            </div>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer slds-modal__footer_directional">
+                        <lightning-button
+                            label="Cancel"
+                            onclick={handleCloseUploadModal}
+                            disabled={isUploading}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label="Upload"
+                            onclick={handleUploadFile}
+                            disabled={uploadDisabled}
+                        ></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Create Folder Modal -->
+        <template if:true={showFolderModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open" aria-modal="true">
+                <div class={folderModalContainerClass}>
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close"
+                                onclick={handleCloseFolderModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="Close" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-modal__title slds-hyphenate slds-text-align_center">Create New Folder</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                        <template if:false={isCreatingFolder}>
+                            <div class="slds-form-element">
+                                <lightning-input
+                                    type="text"
+                                    label="Folder Name"
+                                    placeholder="Enter folder name..."
+                                    value={newFolderName}
+                                    onchange={handleFolderNameChange}
+                                    required
+                                ></lightning-input>
+                                <p class="slds-text-color_weak slds-m-top_small slds-text-body_small">
+                                    Folder will be created in the current location
+                                </p>
+                            </div>
+                        </template>
+                        <template if:true={isCreatingFolder}>
+                            <div class="upload-progress-container">
+                                <lightning-spinner alternative-text="Creating folder..." size="medium"></lightning-spinner>
+                                <p class="progress-title">Creating folder...</p>
+                                <p class="progress-subtitle">{newFolderName}</p>
+                            </div>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer slds-modal__footer_directional">
+                        <lightning-button
+                            label="Cancel"
+                            onclick={handleCloseFolderModal}
+                            disabled={isCreatingFolder}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label="Create"
+                            onclick={handleCreateFolder}
+                            disabled={createFolderDisabled}
+                        ></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        <!-- Breadcrumb Navigation -->
+        <div if:true={showBreadcrumbs} class="slds-p-horizontal_medium slds-p-vertical_small">
+            <div class="breadcrumb-bar">
+                <lightning-icon icon-name="utility:home" size="x-small"></lightning-icon>
+                <nav role="navigation" aria-label="Breadcrumbs">
+                    <ol class="slds-breadcrumb slds-list_horizontal">
+                        <template for:each={breadcrumbsWithCurrent} for:item="crumb">
+                            <li key={crumb.id} class="slds-breadcrumb__item">
+                                <a href="javascript:void(0);"
+                                   class={crumb.isCurrent}
+                                   data-id={crumb.id}
+                                   data-current={crumb.isCurrent}
+                                   onclick={handleBreadcrumbClick}>
+                                    {crumb.name}
+                                </a>
+                            </li>
+                        </template>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+
+
+        <!-- Loading Spinner -->
+        <div if:true={isLoading} class="slds-text-align_center">
+            <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+        </div>
+
+        <!-- Error Message -->
+        <div if:true={errorMessage} class="slds-p-horizontal_medium slds-p-bottom_small">
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <h2>{errorMessage}</h2>
+            </div>
+        </div>
+
+        <!-- Results Header with View Toggle -->
+        <div if:true={hasResults} class="slds-p-horizontal_medium slds-p-vertical_x-small">
+            <div class="results-header-bar">
+                <h3 class="slds-text-heading_small slds-text-color_weak">{resultsHeaderText}</h3>
+                <div class="view-toggle">
+                    <lightning-button-group>
+                        <lightning-button-icon
+                            icon-name="utility:tile_card_list"
+                            alternative-text="Grid View"
+                            title="Grid View"
+                            variant={gridButtonVariant}
+                            data-view="grid"
+                            onclick={handleViewToggle}
+                        ></lightning-button-icon>
+                        <lightning-button-icon
+                            icon-name="utility:text"
+                            alternative-text="List View"
+                            title="List View"
+                            variant={listButtonVariant}
+                            data-view="list"
+                            onclick={handleViewToggle}
+                        ></lightning-button-icon>
+                    </lightning-button-group>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Grid View -->
+        <div if:true={hasResults} class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <div if:true={isGridView} class="simple-grid">
+                <template for:each={documents} for:item="doc">
+                    <div key={doc.id} class="doc-card">
+
+                        <!-- Folder -->
+                        <template if:true={doc.isFolder}>
+                            <div class="doc-folder" data-id={doc.id} data-name={doc.name} onclick={handleFolderClick}>
+                                <lightning-icon icon-name={doc.iconName} size="medium"></lightning-icon>
+                                <div class="doc-info">
+                                    <div class="doc-name">{doc.name}</div>
+                                    <div class="doc-meta">{doc.formattedSize}</div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- File -->
+                        <template if:false={doc.isFolder}>
+                            <div class="doc-file">
+                                <lightning-icon icon-name={doc.iconName} size="medium"></lightning-icon>
+                                <div class="doc-info">
+                                    <div class="doc-name">{doc.name}</div>
+                                    <div class="doc-meta">{doc.formattedSize}</div>
+                                </div>
+                                <div class="doc-actions">
+                                    <lightning-button-icon
+                                        icon-name="utility:preview"
+                                        variant="border-filled"
+                                        alternative-text="View"
+                                        title="View"
+                                        data-id={doc.id}
+                                        data-url={doc.webUrl}
+                                        onclick={handleViewDocument}
+                                    ></lightning-button-icon>
+                                    <lightning-button-icon
+                                        icon-name="utility:download"
+                                        variant="border-filled"
+                                        alternative-text="Download"
+                                        title="Download"
+                                        data-url={doc.webUrl}
+                                        onclick={handleDownloadDocument}
+                                    ></lightning-button-icon>
+                                </div>
+                            </div>
+                        </template>
+
+                    </div>
+                </template>
+            </div>
+
+            <!-- Documents List View -->
+            <div if:true={isListView} class="simple-list">
+                <template for:each={documents} for:item="doc">
+                    <div key={doc.id} class="list-item">
+                        <div class="list-item-icon">
+                            <lightning-icon icon-name={doc.iconName} size="small"></lightning-icon>
+                        </div>
+                        <div class="list-item-info">
+                            <template if:true={doc.isFolder}>
+                                <div class="list-item-name folder-link"
+                                     data-id={doc.id}
+                                     data-name={doc.name}
+                                     onclick={handleFolderClick}>
+                                    {doc.name}
+                                </div>
+                            </template>
+                            <template if:false={doc.isFolder}>
+                                <div class="list-item-name">{doc.name}</div>
+                            </template>
+                            <div class="list-item-type">{doc.itemType}</div>
+                        </div>
+                        <div class="list-item-size">{doc.formattedSize}</div>
+                        <div class="list-item-actions">
+                            <template if:false={doc.isFolder}>
+                                <lightning-button-icon
+                                    icon-name="utility:preview"
+                                    variant="bare"
+                                    alternative-text="View"
+                                    title="View"
+                                    data-id={doc.id}
+                                    data-url={doc.webUrl}
+                                    onclick={handleViewDocument}
+                                ></lightning-button-icon>
+                                <lightning-button-icon
+                                    icon-name="utility:download"
+                                    variant="bare"
+                                    alternative-text="Download"
+                                    title="Download"
+                                    data-url={doc.webUrl}
+                                    onclick={handleDownloadDocument}
+                                ></lightning-button-icon>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div if:true={showNoResults} class="slds-p-around_large slds-text-align_center">
+            <lightning-icon icon-name="utility:search" size="large" class="slds-m-bottom_small"></lightning-icon>
+            <h3 class="slds-text-heading_medium slds-m-bottom_x-small">No Results Found</h3>
+            <p class="slds-text-color_weak">Try a different search term or clear filters to browse all files.</p>
+        </div>
+
+    </lightning-card>
+</template>

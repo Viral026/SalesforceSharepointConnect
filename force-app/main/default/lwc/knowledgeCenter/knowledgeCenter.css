@@ -1,0 +1,528 @@
+/* Card Styling */
+lightning-card {
+    margin: 1.5rem;
+}
+
+/* Custom Centered Header */
+.custom-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.header-icon {
+    color: #0176d3;
+    flex-shrink: 0;
+}
+
+.header-title {
+    color: #080707;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+/* Simple Search Bar */
+.simple-search {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    max-width: 600px;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 280px;
+}
+
+/* Breadcrumb Bar */
+.breadcrumb-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: #f3f3f3;
+    border-radius: 0.25rem;
+}
+
+/* Action Buttons Container */
+.action-buttons-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.breadcrumb-bar lightning-icon {
+    flex-shrink: 0;
+}
+
+.breadcrumb-bar a {
+    color: #0176d3;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.breadcrumb-bar a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-bar a[data-current="true"] {
+    font-weight: 700;
+    color: #181818;
+    pointer-events: none;
+}
+
+.breadcrumb-bar a[data-current="true"]:hover {
+    text-decoration: none;
+}
+
+/* Full Width Button */
+.full-width-button {
+    width: 100%;
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+/* Modal Styling */
+.slds-modal__header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.slds-modal__header .slds-modal__close {
+    position: absolute;
+    right: 0;
+}
+
+.slds-modal__title {
+    flex: 1;
+    text-align: center;
+    padding-right: 2.5rem; /* Balance the close button width */
+}
+
+.slds-modal__footer_directional {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.selected-file-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background-color: #f3f3f3;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    margin-top: 1rem;
+}
+
+.file-details {
+    flex: 1;
+    text-align: left;
+}
+
+.file-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #080707;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-size {
+    font-size: 0.75rem;
+    color: #706e6b;
+    margin: 0.25rem 0 0 0;
+}
+
+.upload-progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    min-height: 200px;
+    background-color: transparent !important;
+}
+
+/* Remove white background from spinner */
+.upload-progress-container lightning-spinner {
+    --slds-c-spinner-color-background: transparent;
+}
+
+/* Target the spinner container to remove default backgrounds */
+lightning-spinner::part(container),
+.slds-spinner_container {
+    background-color: transparent !important;
+}
+
+/* Transparent modal for loading states */
+.modal-transparent {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.modal-transparent .slds-modal__content {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+
+.modal-transparent .slds-modal__header,
+.modal-transparent .slds-modal__footer {
+    display: none !important;
+}
+
+
+.progress-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #080707;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.progress-subtitle {
+    font-size: 0.875rem;
+    color: #706e6b;
+    word-break: break-word;
+    text-align: center;
+    max-width: 100%;
+}
+
+.upload-progress {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+/* Action Bar - Legacy (keeping for backwards compatibility but hidden) */
+.action-bar {
+    display: none;
+}
+
+.action-item {
+    display: none;
+}
+
+.folder-input {
+    width: 200px;
+}
+
+.status-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #706e6b;
+    font-style: italic;
+}
+
+.selected-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #181818;
+    font-weight: 500;
+    max-width: 300px;
+}
+
+.remove-file-btn {
+    flex-shrink: 0;
+}
+
+/* Simple Grid for Documents */
+.simple-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.75rem;
+}
+
+.doc-card {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.doc-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Folder Style */
+.doc-folder {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    cursor: pointer;
+    border-left: 3px solid #FFD966;
+}
+
+.doc-folder:hover {
+    background-color: #f4f6f9;
+}
+
+.doc-folder lightning-icon {
+    flex-shrink: 0;
+    --slds-c-icon-color-foreground: #FFD966;
+}
+
+/* File Style */
+.doc-file {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-left: 3px solid #0176d3;
+}
+
+.doc-file lightning-icon {
+    flex-shrink: 0;
+}
+
+/* Document Info */
+.doc-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.doc-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #080707;
+    margin-bottom: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.doc-folder .doc-name {
+    color: #181818;
+    font-weight: 600;
+}
+
+.doc-meta {
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+/* Document Actions */
+.doc-actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+/* Results Header Bar with View Toggle */
+.results-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dddbda;
+    margin-bottom: 1rem;
+}
+
+.view-toggle {
+    flex-shrink: 0;
+}
+
+/* List View Styles */
+.simple-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background: white;
+}
+
+.list-item {
+    display: grid;
+    grid-template-columns: 40px 1fr 120px 80px;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f3f3;
+    transition: background-color 0.2s ease;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item:hover {
+    background-color: #f9f9f9;
+}
+
+.list-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Folder icon color in list view */
+.list-item:has(.folder-link) .list-item-icon lightning-icon {
+    --slds-c-icon-color-foreground: #FFD966;
+}
+
+.list-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-item-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #080707;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 0.125rem;
+}
+
+.folder-link {
+    color: #181818;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.folder-link:hover {
+    text-decoration: underline;
+}
+
+.list-item-type {
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+.list-item-size {
+    font-size: 0.875rem;
+    color: #3e3e3c;
+    text-align: right;
+}
+
+.list-item-actions {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: flex-end;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    lightning-card {
+        margin: 0.5rem;
+    }
+
+    .custom-header {
+        padding: 1rem 0.5rem;
+    }
+
+    .header-title {
+        font-size: 1.125rem;
+    }
+
+    .simple-search {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 100%;
+    }
+
+    .search-input {
+        min-width: auto;
+    }
+
+    .simple-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .list-item {
+        grid-template-columns: 32px 1fr 60px;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .list-item-size {
+        font-size: 0.75rem;
+    }
+
+    .list-item-actions {
+        grid-column: 2 / 4;
+        justify-content: flex-start;
+        margin-top: 0.25rem;
+    }
+}
+
+/* Modal Enhancements */
+.slds-modal__container {
+    max-width: 500px;
+}
+
+.slds-modal__header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.upload-progress,
+.folder-creation-progress {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Global spinner background removal */
+lightning-spinner,
+.slds-spinner_container {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Remove spinner overlay backgrounds */
+.slds-spinner_container::before,
+.slds-spinner_container::after {
+    display: none !important;
+}
+
+/* Ensure modal content doesn't add white backgrounds during loading */
+.slds-modal__content lightning-spinner {
+    background: transparent !important;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+    .slds-modal__container {
+        max-width: 90%;
+        margin: 1rem;
+    }
+
+    .selected-file-display {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
